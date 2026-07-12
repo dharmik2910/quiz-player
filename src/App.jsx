@@ -7,7 +7,7 @@ import QuizList from './pages/QuizList';
 import QuizPlayer from './pages/QuizPlayer';
 import ResultScreen from './pages/ResultScreen';
 import Leaderboard from './pages/Leaderboard';
-import { saveScore } from './services/Config';
+import { saveScore } from './services/config';
 import { getQuizById, getQuizzes } from './utils/quizData';
 import QuizPlayerSkeleton from './components/quiz/QuizPlayerSkeleton';
 import LeaderboardSkeleton from './components/leaderboard/LeaderboardSkeleton';
