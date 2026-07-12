@@ -8,6 +8,16 @@ const Navbar = () => {
   const location = useLocation();
 
   const isActive = (path) => {
+    if (path === '/') {
+      // Mark Home active only on exact root, not while playing quizzes/results.
+      return location.pathname === '/';
+    }
+
+    if (path === '/leaderboard') {
+      // Keep Leaderboard tab active for both /leaderboard and /leaderboard/:quizId
+      return location.pathname === '/leaderboard' || location.pathname.startsWith('/leaderboard/');
+    }
+
     return location.pathname === path;
   };
 

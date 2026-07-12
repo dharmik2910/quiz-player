@@ -1,14 +1,14 @@
 // QuizPlayer.jsx
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Timer from '../components/Timer';
-import ProgressBar from '../components/ProgressBar';
-import OptionButton from '../components/OptionButton';
+import Timer from '../components/quiz/Timer';
+import ProgressBar from '../components/quiz/ProgressBar';
+import OptionButton from '../components/quiz/OptionButton';
 import { shuffleArray } from '../utils/quizData';
 import { ArrowRight } from 'lucide-react';
-import QuestionNav from '../components/QuestionNav';
+import QuestionNav from '../components/quiz/QuestionNav';
 import soundManager, { SOUNDS } from '../utils/soundManager';
-import QuizPlayerSkeleton from '../components/QuizPlayerSkeleton';
+import QuizPlayerSkeleton from '../components/quiz/QuizPlayerSkeleton';
 
 const QuizPlayer = ({ quiz, onComplete }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -22,12 +22,12 @@ const QuizPlayer = ({ quiz, onComplete }) => {
   const [answers, setAnswers] = useState({});
   const [timeWarning, setTimeWarning] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // Use refs to track current values for callbacks
   const scoreRef = useRef(score);
   const correctAnswersRef = useRef(correctAnswers);
   const wrongAnswersRef = useRef(wrongAnswers);
-  
+
   // Update refs when state changes
   useEffect(() => { scoreRef.current = score; }, [score]);
   useEffect(() => { correctAnswersRef.current = correctAnswers; }, [correctAnswers]);
@@ -132,15 +132,15 @@ const QuizPlayer = ({ quiz, onComplete }) => {
     }
   }, [currentQuestionIndex, quiz.timePerQuestion, answers]);
 
-useEffect(() => {
-  setIsLoading(true);
+  useEffect(() => {
+    setIsLoading(true);
 
-  const timer = setTimeout(() => {
-    setIsLoading(false);
-  }, 600); // adjust time if needed
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 600); // adjust time if needed
 
-  return () => clearTimeout(timer);
-}, [quiz]);
+    return () => clearTimeout(timer);
+  }, [quiz]);
 
   useEffect(() => {
     if (!currentQuestion || isAnswered) return;
@@ -152,12 +152,12 @@ useEffect(() => {
           handleTimeUp();
           return 0;
         }
-        
+
         // Play warning tick when time is running low (last 5 seconds)
         if (prev <= 5 && prev > 0 && !timeWarning) {
           soundManager.play(SOUNDS.TICK);
         }
-        
+
         return prev - 1;
       });
     }, 1000);
@@ -165,9 +165,23 @@ useEffect(() => {
     return () => clearInterval(timer);
   }, [currentQuestion, isAnswered, handleTimeUp, timeWarning]);
 
-if (isLoading) {
-  return <QuizPlayerSkeleton />;
-}
+  useEffect(() => {
+    setIsLoading(true);
+
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 600)
+
+    return () => clearTimeout(timer);
+  }, [quiz]);
+
+  useEffect(() => {
+    document.title = quiz?.title || 'Quiz Player';
+  }, [quiz]);
+
+  if (isLoading) {
+    return <QuizPlayerSkeleton />;
+  }
 
   return (
     <div className="min-h-screen md:overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col overflow-y-auto md:overflow-hidden">
@@ -181,7 +195,7 @@ if (isLoading) {
       </div>
 
       <div className="flex-1 flex flex-col md:flex-row items-start justify-start md:justify-center gap-3 md:gap-4 lg:gap-6 px-3 sm:px-6 lg:px-8 py-1 overflow-y-auto md:overflow-hidden">
-        <div className="w-full sm:max-w-md md:w-56 lg:w-64 mx-auto md:mx-0 bg-white rounded-md shadow-xl p-3 mt-1 order-2 md:order-1 flex-shrink-0">
+        <div className="w-full sm:max-w-md md:w-56 lg:w-64 mx-auto md:mx-0 bg-white rounded-md shadow-xl p-3 mt-0 order-2 md:order-1 flex-shrink-0">
           <QuestionNav
             total={questions.length}
             currentIndex={currentQuestionIndex}

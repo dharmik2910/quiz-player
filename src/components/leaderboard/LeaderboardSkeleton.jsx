@@ -5,9 +5,9 @@ const LeaderboardSkeleton = () => {
 
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="w-10 h-10 rounded-full bg-gray-200 mx-auto mb-4"></div>
+          {/* <div className="w-10 h-10 rounded-full bg-gray-200 mx-auto mb-4"></div> */}
 
-          <div className="h-10 w-72 bg-gray-200 rounded mx-auto mb-4"></div>
+          <div className="h-10 w-76 bg-gray-200 rounded mx-auto mb-4"></div>
 
           <div className="h-5 w-[650px] max-w-full bg-gray-200 rounded mx-auto"></div>
         </div>

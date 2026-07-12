@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { getLeaderboard } from '../services/Config';
+import { getLeaderboard } from '../services/config';
 import { Award, User, Home } from 'lucide-react';
-import LeaderboardSkeleton from '../components/LeaderboardSkeleton';
+import LeaderboardDashboardSkeleton from '../components/leaderboard/LeaderboardDashboardSkeleton';
+
 
 const Leaderboard = ({ quiz, onHome }) => {
   const [leaderboard, setLeaderboard] = useState([]);
@@ -33,6 +34,12 @@ const Leaderboard = ({ quiz, onHome }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quiz.id]);
 
+useEffect(() => {
+  document.title = quiz?.title
+    ? ` Leaderboard | ${quiz.title}`
+    : ' Leaderboard';
+}, [quiz?.title]);
+
   const getRankIcon = (index) => {
     if (index === 0) return <Award className="text-yellow-500 text-2xl" />;
     if (index === 1) return <Award className="text-gray-400 text-2xl" />;
@@ -60,7 +67,7 @@ const Leaderboard = ({ quiz, onHome }) => {
   };
 
   if (isLoading) {
-    return <LeaderboardSkeleton />;
+    return <LeaderboardDashboardSkeleton />;
   }
 
   return (
@@ -71,8 +78,8 @@ const Leaderboard = ({ quiz, onHome }) => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Award className="text-4xl text-yellow-500" />
+          <div className="flex items-center justify-center gap-3 mb-4 mt-1">
+            <Award className="text-4xl text-yellow-500 size-10" />
             <h1 className="text-4xl sm:text-5xl font-bold text-gray-900">
               Leaderboard
             </h1>

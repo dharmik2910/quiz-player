@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Volume2, VolumeX } from 'lucide-react';
-import soundManager from '../utils/soundManager';
+import soundManager from '../../utils/soundManager';
 
 const SoundToggle = () => {
   const [isMuted, setIsMuted] = useState(false);

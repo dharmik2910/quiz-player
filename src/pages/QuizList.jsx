@@ -1,10 +1,10 @@
 // QuizList.jsx
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import QuizCard from '../components/QuizCard';
+import QuizCard from '../components/quiz/QuizCard';
 import { getQuizzes } from '../utils/quizData';
 import { Search, BookOpen, Filter } from 'lucide-react';
-import SkeletonQuizCard from '../components/SkeletonQuizCard';
+import QuizCardSkeleton from '../components/quiz/QuizCardSkeleton';
 
 const QuizList = ({ onPlayQuiz }) => {
   const [quizzes, setQuizzes] = useState([]);
@@ -57,8 +57,9 @@ if (isLoading) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Header Skeleton */}
         <div className="text-center mb-8">
-          <div className="h-10 w-64 bg-gray-200 rounded mx-auto mb-4 animate-pulse"></div>
-          <div className="h-5 w-96 max-w-full bg-gray-200 rounded mx-auto animate-pulse"></div>
+          <div className="h-13 w-64 bg-gray-200 rounded mx-auto mb-4 animate-pulse"></div>
+          <div className="h-17 w-160 max-w-full bg-gray-200 rounded mx-auto animate-pulse"></div>
+          
         </div>
 
         {/* Search Skeleton */}
@@ -73,7 +74,7 @@ if (isLoading) {
         {/* Quiz Cards Skeleton */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
           {Array.from({ length: 6 }).map((_, index) => (
-            <SkeletonQuizCard key={index} />
+            <QuizCardSkeleton key={index} />
           ))}
         </div>
       </div>
@@ -90,12 +91,12 @@ if (isLoading) {
           className="text-center mb-6 sm:mb-8 lg:mb-12"
         >
           <div className="flex items-center justify-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-            <BookOpen className="text-3xl sm:text-4xl text-blue-600" />
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">
+            <BookOpen className="text-3xl sm:text-4xl text-blue-600 size-10" />
+            <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">
               Quiz Player
             </h1>
           </div>
-          <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto px-2">
+          <p className="text-md sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto px-2">
             Challenge yourself with our collection of quizzes. Test your knowledge across various categories and difficulty levels.
           </p>
         </motion.div>

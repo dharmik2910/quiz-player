@@ -9,8 +9,9 @@ import ResultScreen from './pages/ResultScreen';
 import Leaderboard from './pages/Leaderboard';
 import { saveScore } from './services/Config';
 import { getQuizById, getQuizzes } from './utils/quizData';
-import QuizPlayerSkeleton from './components/QuizPlayerSkeleton';
-import LeaderboardSkeleton from './components/LeaderboardSkeleton';
+import QuizPlayerSkeleton from './components/quiz/QuizPlayerSkeleton';
+import LeaderboardSkeleton from './components/leaderboard/LeaderboardSkeleton';
+import LeaderboardDashboardSkeleton from './components/leaderboard/LeaderboardDashboardSkeleton';
 
 const App = () => {
   return (
@@ -28,6 +29,10 @@ const App = () => {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = 'Quiz Player';
+  }, []);
 
   const handlePlayQuiz = (quiz) => {
     navigate(`/quiz/${quiz.id}`);
@@ -56,12 +61,17 @@ const QuizPlay = () => {
     loadQuiz();
   }, [quizId]);
 
+  useEffect(() => {
+    document.title = selectedQuiz?.title
+      ? `Quiz Player | ${selectedQuiz.title}`
+      : 'Quiz Player';
+  }, [selectedQuiz]);
+
   const handleComplete = (result) => {
     if (!selectedQuiz) return;
-    
+
     const playerName = `Player_${Date.now().toString(36)}`;
-    
-    // Save score in background without blocking navigation
+
     saveScore({
       name: playerName,
       quizId: selectedQuiz.id,
@@ -75,7 +85,6 @@ const QuizPlay = () => {
       console.error('Failed to save score:', error);
     });
 
-    // Navigate immediately
     navigate(`/result/${quizId}`, { state: { result } });
   };
 
@@ -85,9 +94,9 @@ const QuizPlay = () => {
     }
   };
 
-if (isLoading) {
-  return <QuizPlayerSkeleton />;
-}
+  if (isLoading) {
+    return <QuizPlayerSkeleton />;
+  }
 
   if (!selectedQuiz) {
     return (
@@ -129,6 +138,12 @@ const QuizResult = () => {
     };
     loadQuiz();
   }, [quizId]);
+
+  useEffect(() => {
+    document.title = quiz?.title
+      ? `Quiz Player | Results | ${quiz.title}`
+      : 'Quiz Player';
+  }, [quiz]);
 
   const handlePlayAgain = () => {
     navigate(`/quiz/${quizId}`);
@@ -173,26 +188,35 @@ const LeaderboardPage = () => {
     loadQuizzes();
   }, []);
 
+  useEffect(() => {
+    document.title = 'Leaderboard';
+  }, []);
+
   const handleViewLeaderboard = (quiz) => {
     navigate(`/leaderboard/${quiz.id}`);
   };
 
-if (isLoading) {
-  return <LeaderboardSkeleton />;
-}
+  if (isLoading) {
+    return <LeaderboardSkeleton />;
+  }
 
   return (
-    <div className="h-screen bg-gradient-to-br from-gray-50 to-gray-100 overflow-y-auto py-12 px-4">
+    <div className="h-screen bg-gradient-to-br from-gray-50 to-gray-100 overflow-y-auto py-10 px-4">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <Trophy className="text-5xl text-yellow-500 mx-auto mb-4" />
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-            Leaderboard
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+          className="text-center mb-8 sm:mb-10 lg:mb-12"
+        >
+          <h1 className="flex items-center justify-center gap-2 sm:gap-3 text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4">
+            <Trophy className="text-yellow-500 w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10" />
+            <span>Leaderboard</span>
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto px-2">
             Select a quiz to view the top scores and see how you rank against other players.
           </p>
-        </div>
+        </motion.div>
 
         {quizzes.length === 0 ? (
           <div className="text-center py-20">
@@ -213,11 +237,10 @@ if (isLoading) {
               >
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-4">
-                    <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${
-                      quiz.difficulty === 'Easy' ? 'bg-green-100 text-green-700 border-green-200' :
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${quiz.difficulty === 'Easy' ? 'bg-green-100 text-green-700 border-green-200' :
                       quiz.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-700 border-yellow-200' :
-                      'bg-red-100 text-red-700 border-red-200'
-                    }`}>
+                        'bg-red-100 text-red-700 border-red-200'
+                      }`}>
                       {quiz.difficulty}
                     </span>
                     <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
@@ -228,7 +251,7 @@ if (isLoading) {
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
                     {quiz.title}
                   </h3>
-                  
+
                   <p className="text-gray-600 text-sm mb-4 line-clamp-2">
                     {quiz.description}
                   </p>
@@ -279,9 +302,9 @@ const QuizLeaderboard = () => {
     navigate('/leaderboard');
   };
 
-if (isLoading) {
-  return <LeaderboardSkeleton />;
-}
+  if (isLoading) {
+    return <LeaderboardDashboardSkeleton />;
+  }
 
   if (error) {
     return (

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Award, Check, X, TrendingUp, RefreshCw, Home, Send, Trophy, User } from 'lucide-react';
-import { getLeaderboard } from '../services/Config';
+import { getLeaderboard } from '../services/config';
 
 const ResultScreen = ({ result, quizId, quizTitle, onPlayAgain, onHome }) => {
   const [playerName, setPlayerName] = useState('');
@@ -72,7 +72,7 @@ const ResultScreen = ({ result, quizId, quizTitle, onPlayAgain, onHome }) => {
 
     setIsSubmitting(true);
     try {
-      const { saveScore } = await import('../services/Config');
+      const { saveScore } = await import('../services/config');
       await saveScore({
         name: playerName,
         quizId: quizId,
@@ -254,78 +254,77 @@ const ResultScreen = ({ result, quizId, quizTitle, onPlayAgain, onHome }) => {
                 <h3 className="text-2xl font-bold text-gray-900">Top 10 Leaderboard</h3>
               </div>
 
-              <div className="h-[320px] overflow-y-auto pr-2">
-  {isLoadingLeaderboard ? (
-    <div className="space-y-3">
-      {[1, 2, 3].map((i) => (
-        <div
-          key={i}
-          className="h-16 rounded-xl bg-gradient-to-r from-gray-100 via-gray-50 to-gray-100 animate-pulse"
-        />
-      ))}
-    </div>
-  ) : leaderboard.length === 0 ? (
-    <div className="text-center py-12">
-      <Trophy className="mx-auto mb-3 text-gray-300" size={48} />
-      <p className="text-gray-600 font-medium">No scores yet</p>
-      <p className="text-sm text-gray-500 mt-1">
-        Be the first to complete this quiz!
-      </p>
-    </div>
-  ) : (
-    <div className="space-y-3">
-      {leaderboard.map((entry, index) => (
-        <motion.div
-          key={entry.id}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: index * 0.05 }}
-          className={`flex items-center gap-3 p-3 rounded-lg border-2 ${
-            index === 0
-              ? 'bg-gradient-to-r from-yellow-50 to-yellow-100 border-yellow-200'
-              : index === 1
-              ? 'bg-gradient-to-r from-gray-50 to-gray-100 border-gray-200'
-              : index === 2
-              ? 'bg-gradient-to-r from-orange-50 to-orange-100 border-orange-200'
-              : 'bg-white border-gray-200'
-          }`}
-        >
-          <div className="flex-shrink-0 w-8 text-center">
-            {index === 0 && <Trophy className="text-yellow-500" size={20} />}
-            {index === 1 && <Trophy className="text-gray-400" size={20} />}
-            {index === 2 && <Trophy className="text-orange-600" size={20} />}
-            {index > 2 && (
-              <span className="text-sm font-bold text-gray-500">
-                #{index + 1}
-              </span>
-            )}
-          </div>
+              <div className="h-[240px] overflow-y-auto pr-2">
+                {isLoadingLeaderboard ? (
+                  <div className="space-y-3">
+                    {[1, 2, 3].map((i) => (
+                      <div
+                        key={i}
+                        className="h-16 rounded-xl bg-gradient-to-r from-gray-100 via-gray-50 to-gray-100 animate-pulse"
+                      />
+                    ))}
+                  </div>
+                ) : leaderboard.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Trophy className="mx-auto mb-3 text-gray-300" size={48} />
+                    <p className="text-gray-600 font-medium">No scores yet</p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Be the first to complete this quiz!
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {leaderboard.map((entry, index) => (
+                      <motion.div
+                        key={entry.id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        className={`flex items-center gap-3 p-3 rounded-lg border-2 ${index === 0
+                            ? 'bg-gradient-to-r from-yellow-50 to-yellow-100 border-yellow-200'
+                            : index === 1
+                              ? 'bg-gradient-to-r from-gray-50 to-gray-100 border-gray-200'
+                              : index === 2
+                                ? 'bg-gradient-to-r from-orange-50 to-orange-100 border-orange-200'
+                                : 'bg-white border-gray-200'
+                          }`}
+                      >
+                        <div className="flex-shrink-0 w-8 text-center">
+                          {index === 0 && <Trophy className="text-yellow-500" size={20} />}
+                          {index === 1 && <Trophy className="text-gray-400" size={20} />}
+                          {index === 2 && <Trophy className="text-orange-600" size={20} />}
+                          {index > 2 && (
+                            <span className="text-sm font-bold text-gray-500">
+                              #{index + 1}
+                            </span>
+                          )}
+                        </div>
 
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <User
-                className="text-gray-400 flex-shrink-0"
-                size={16}
-              />
-              <p className="font-semibold text-gray-900 truncate text-sm">
-                {entry.name || 'Anonymous'}
-              </p>
-            </div>
-          </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <User
+                              className="text-gray-400 flex-shrink-0"
+                              size={16}
+                            />
+                            <p className="font-semibold text-gray-900 truncate text-sm">
+                              {entry.name || 'Anonymous'}
+                            </p>
+                          </div>
+                        </div>
 
-          <div className="flex-shrink-0 text-right">
-            <p className="text-lg font-bold text-gray-900">
-              {entry.score}
-            </p>
-            <p className="text-xs text-gray-500">
-              {entry.percentage}%
-            </p>
-          </div>
-        </motion.div>
-      ))}
-    </div>
-  )}
-</div>
+                        <div className="flex-shrink-0 text-right">
+                          <p className="text-lg font-bold text-gray-900">
+                            {entry.score}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {entry.percentage}%
+                          </p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </motion.div>
           </div>
 
