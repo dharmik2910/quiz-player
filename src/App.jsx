@@ -88,11 +88,12 @@ const QuizPlay = () => {
     navigate(`/result/${quizId}`, { state: { result } });
   };
 
-  const handleQuit = () => {
-    if (window.confirm('Are you sure you want to quit? Your progress will be lost.')) {
-      navigate('/');
-    }
-  };
+const handleQuit = () => {
+  if (window.confirm('Are you sure you want to quit? Your progress will be lost.')) {
+    localStorage.removeItem(`quiz-progress-${selectedQuiz.id}`);
+    navigate('/');
+  }
+};
 
   if (isLoading) {
     return <QuizPlayerSkeleton />;

@@ -22,6 +22,7 @@ const QuizPlayer = ({ quiz, onComplete }) => {
   const [answers, setAnswers] = useState({});
   const [timeWarning, setTimeWarning] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasRestored, setHasRestored] = useState(false);
 
   // Use refs to track current values for callbacks
   const scoreRef = useRef(score);
@@ -34,7 +35,34 @@ const QuizPlayer = ({ quiz, onComplete }) => {
   useEffect(() => { wrongAnswersRef.current = wrongAnswers; }, [wrongAnswers]);
 
   const questions = useMemo(() => {
-    return shuffleArray([...quiz.questions]).map(q => ({
+    if (!quiz) return [];
+
+    const storageKey = `quiz-progress-${quiz.id}`;
+
+    // Restore stable question order on refresh (prevents “back to Q1” feeling due to re-shuffling)
+    const saved = localStorage.getItem(storageKey);
+    const savedProgress = saved ? JSON.parse(saved) : null;
+
+    let questionOrder = savedProgress?.questionOrder;
+
+    // If nothing saved yet, generate once and persist
+    if (!Array.isArray(questionOrder) || questionOrder.length !== quiz.questions.length) {
+      // Persist a stable permutation of question indices for this quiz.
+      questionOrder = shuffleArray(quiz.questions.map((_, i) => i));
+
+      localStorage.setItem(
+        storageKey,
+        JSON.stringify({
+          ...(savedProgress || {}),
+          questionOrder
+        })
+      );
+    }
+
+
+    const orderedQuestions = questionOrder.map(i => quiz.questions[i]);
+
+    return orderedQuestions.map(q => ({
       ...q,
       shuffledOptions: shuffleArray(
         q.options.map((text, index) => ({ text, index }))
@@ -42,38 +70,101 @@ const QuizPlayer = ({ quiz, onComplete }) => {
     }));
   }, [quiz]);
 
+
   const currentQuestion = questions[currentQuestionIndex];
 
-  const handleTimeUp = useCallback(() => {
-    if (!isAnswered) {
-      setIsAnswered(true);
-      setWrongAnswers(prev => prev + 1);
-      setAnswers(prev => ({ ...prev, [currentQuestionIndex]: { status: 'skipped', option: null } }));
-      soundManager.play(SOUNDS.TIME_UP);
+  // Guard: prevents handleTimeUp() from scheduling multiple transitions for the same question
+  const timeUpHandledRef = useRef(false);
 
-      setTimeout(() => {
-        if (currentQuestionIndex < questions.length - 1) {
-          soundManager.play(SOUNDS.TRANSITION);
-          setDirection(1);
-          setCurrentQuestionIndex(prev => prev + 1);
-          setSelectedOption(null);
-          setIsAnswered(false);
-          setTimeLeft(quiz.timePerQuestion);
-          setTimeWarning(false);
-        } else {
-          soundManager.play(SOUNDS.COMPLETE);
-          // Use refs to get current state values
-          onComplete({
+
+  useEffect(() => {
+    if (!quiz) return;
+
+    const storageKey = `quiz-progress-${quiz.id}`;
+    const saved = localStorage.getItem(storageKey);
+    if (!saved) {
+      setHasRestored(true);
+      return;
+    }
+
+    const progress = JSON.parse(saved);
+
+    // If the quiz was already completed, do NOT restore it.
+    // Start a fresh attempt instead of showing the last attempted state.
+    if (progress?.isCompleted) {
+      localStorage.removeItem(storageKey);
+      setHasRestored(true);
+      return;
+    }
+
+    setCurrentQuestionIndex(progress.currentQuestionIndex ?? 0);
+    setScore(progress.score ?? 0);
+    setCorrectAnswers(progress.correctAnswers ?? 0);
+    setWrongAnswers(progress.wrongAnswers ?? 0);
+    setAnswers(progress.answers ?? {});
+    setTimeLeft(progress.timeLeft ?? quiz.timePerQuestion);
+    setSelectedOption(progress.selectedOption ?? null);
+    setIsAnswered(progress.isAnswered ?? false);
+
+    setHasRestored(true);
+  }, [quiz]);
+
+
+  const handleTimeUp = useCallback(() => {
+    // Prevent multiple scheduling for the same question when the interval ticks multiple times
+    if (timeUpHandledRef.current || isAnswered) return;
+
+    timeUpHandledRef.current = true;
+
+    setIsAnswered(true);
+    setWrongAnswers(prev => prev + 1);
+    setAnswers(prev => ({ ...prev, [currentQuestionIndex]: { status: 'skipped', option: null } }));
+    soundManager.play(SOUNDS.TIME_UP);
+
+    setTimeout(() => {
+      if (currentQuestionIndex < questions.length - 1) {
+        soundManager.play(SOUNDS.TRANSITION);
+        setDirection(1);
+        setCurrentQuestionIndex(prev => prev + 1);
+        setSelectedOption(null);
+        setIsAnswered(false);
+        setTimeLeft(quiz.timePerQuestion);
+        setTimeWarning(false);
+        // allow next question to be handled by timer
+        timeUpHandledRef.current = false;
+      } else {
+        soundManager.play(SOUNDS.COMPLETE);
+        // Persist final snapshot so reopening this quiz restores the last state
+        const finalIndex = questions.length - 1;
+        localStorage.setItem(
+          `quiz-progress-${quiz.id}`,
+          JSON.stringify({
+            currentQuestionIndex: finalIndex,
             score: scoreRef.current,
             correctAnswers: correctAnswersRef.current,
             wrongAnswers: wrongAnswersRef.current,
-            totalQuestions: questions.length,
-            percentage: Math.round((correctAnswersRef.current / questions.length) * 100)
-          });
-        }
-      }, 1500);
-    }
+            answers: {
+              ...answers,
+              [finalIndex]: answers?.[finalIndex] ?? { status: 'skipped', option: null }
+            },
+            timeLeft: 0,
+            selectedOption: selectedOption ?? null,
+            isAnswered: true,
+            isCompleted: true,
+            questionOrder: JSON.parse(localStorage.getItem(`quiz-progress-${quiz.id}`))?.questionOrder
+          })
+        );
+        onComplete({
+          score: scoreRef.current,
+          correctAnswers: correctAnswersRef.current,
+          wrongAnswers: wrongAnswersRef.current,
+          totalQuestions: questions.length,
+          percentage: Math.round((correctAnswersRef.current / questions.length) * 100)
+        });
+      }
+    }, 1500);
   }, [isAnswered, currentQuestionIndex, questions.length, quiz.timePerQuestion, onComplete]);
+
 
   const handleOptionSelect = useCallback((option) => {
     if (isAnswered) return;
@@ -105,6 +196,26 @@ const QuizPlayer = ({ quiz, onComplete }) => {
       setTimeWarning(false);
     } else {
       soundManager.play(SOUNDS.COMPLETE);
+      // Persist final snapshot so reopening this quiz restores the last state
+      const finalIndex = questions.length - 1;
+      localStorage.setItem(
+        `quiz-progress-${quiz.id}`,
+        JSON.stringify({
+          currentQuestionIndex: finalIndex,
+          score: scoreRef.current,
+          correctAnswers: correctAnswersRef.current,
+          wrongAnswers: wrongAnswersRef.current,
+          answers: {
+            ...answers,
+            [finalIndex]: answers?.[finalIndex] ?? { status: 'skipped', option: null }
+          },
+          timeLeft: 0,
+          selectedOption: selectedOption ?? null,
+          isAnswered: true,
+          isCompleted: true,
+          questionOrder: JSON.parse(localStorage.getItem(`quiz-progress-${quiz.id}`))?.questionOrder
+        })
+      );
       // Use refs to get current state values
       onComplete({
         score: scoreRef.current,
@@ -165,6 +276,12 @@ const QuizPlayer = ({ quiz, onComplete }) => {
     return () => clearInterval(timer);
   }, [currentQuestion, isAnswered, handleTimeUp, timeWarning]);
 
+  // Reset the guard whenever the question changes (also covers jump-to-question)
+  useEffect(() => {
+    timeUpHandledRef.current = false;
+  }, [currentQuestionIndex]);
+
+
   useEffect(() => {
     setIsLoading(true);
 
@@ -175,9 +292,42 @@ const QuizPlayer = ({ quiz, onComplete }) => {
     return () => clearTimeout(timer);
   }, [quiz]);
 
+useEffect(() => {
+  document.title = quiz
+    ? `Quiz Player | ${quiz.title}`
+    : 'Quiz Player';
+}, [quiz]);
+
   useEffect(() => {
-    document.title = quiz?.title || 'Quiz Player';
-  }, [quiz]);
+    if (!quiz) return;
+    if (!hasRestored) return;
+
+    localStorage.setItem(
+      `quiz-progress-${quiz.id}`,
+      JSON.stringify({
+        currentQuestionIndex,
+        score,
+        correctAnswers,
+        wrongAnswers,
+        answers,
+        timeLeft,
+        selectedOption,
+        isAnswered
+      })
+    );
+  }, [
+    quiz,
+    hasRestored,
+    currentQuestionIndex,
+    score,
+    correctAnswers,
+    wrongAnswers,
+    answers,
+    timeLeft,
+    selectedOption,
+    isAnswered
+  ]);
+
 
   if (isLoading) {
     return <QuizPlayerSkeleton />;
