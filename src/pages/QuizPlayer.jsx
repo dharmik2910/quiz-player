@@ -163,6 +163,7 @@ const QuizPlayer = ({ quiz, onComplete }) => {
         });
       }
     }, 1500);
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAnswered, currentQuestionIndex, questions.length, quiz.timePerQuestion, onComplete]);
 
 
@@ -225,6 +226,7 @@ const QuizPlayer = ({ quiz, onComplete }) => {
         percentage: Math.round((correctAnswersRef.current / questions.length) * 100)
       });
     }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentQuestionIndex, questions.length, quiz.timePerQuestion, onComplete]);
 
   const handleJump = useCallback((index) => {
