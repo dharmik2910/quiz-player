@@ -136,6 +136,13 @@ npm run preview
 
 ---
 
+<<<<<<< HEAD
+=======
+
+
+---
+
+>>>>>>> 51ea6ec4d8adb27493619d380b766afc4782c183
 ## Features in Detail
 
 ### Quiz Listing
@@ -182,6 +189,7 @@ npm run preview
 
 ---
 
+<<<<<<< HEAD
 
 ### How AI Was Used
 
@@ -190,4 +198,6 @@ npm run preview
 - Debugging Firebase integration issues
 - Drafting documentation (including this README)
 - Suggesting UI/UX improvements and Tailwind styling patterns
+=======
+>>>>>>> 51ea6ec4d8adb27493619d380b766afc4782c183
 
