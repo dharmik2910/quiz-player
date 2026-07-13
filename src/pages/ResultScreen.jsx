@@ -358,7 +358,7 @@ const ResultScreen = ({ result, quizId, quizTitle, onPlayAgain, onHome }) => {
         </motion.div>
 
         <div className="text-center mt-2">
-          <p className="text-sm text-gray-500">© 2026 QuizMaster • Built with React + Firebase</p>
+          <p className="text-sm text-gray-500">© 2026 Quiz Player • Built with React + Firebase</p>
         </div>
       </div>
     </div>

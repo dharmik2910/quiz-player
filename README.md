@@ -1,6 +1,6 @@
 # Quiz Player Application
 
-A production-grade, responsive **Quiz Player** application built with **React** (Vite), featuring smooth animations and a Firebase-powered leaderboard.
+A responsive **Quiz Player** application built with **React** (Vite), featuring smooth animations and a Firebase-powered leaderboard.
 
 ---
 
@@ -110,8 +110,6 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=123456789
 VITE_FIREBASE_APP_ID=1:123456789:web:abc123
 ```
 
-> If Firebase isn’t configured, the quiz player and routing will still work, but leaderboard requests may fail.
-
 ### Run the app
 
 ```bash
@@ -134,36 +132,6 @@ Preview:
 
 ```bash
 npm run preview
-```
-
----
-
-## Quiz Data Format
-
-Quizzes are loaded from `public/quiz.json`.
-
-Example structure:
-
-```json
-{
-  "id": "unique-quiz-id",
-  "title": "Quiz Title",
-  "description": "Quiz description",
-  "category": "Category Name",
-  "difficulty": "Easy|Medium|Hard",
-  "timePerQuestion": 15,
-  "totalQuestions": 10,
-  "questions": [
-    {
-      "id": "q1",
-      "question": "Question text?",
-      "options": ["Option A", "Option B", "Option C", "Option D"],
-      "correctAnswer": "Option A",
-      "points": 10,
-      "explanation": "Explanation text"
-    }
-  ]
-}
 ```
 
 ---
@@ -214,10 +182,12 @@ Example structure:
 
 ---
 
-## Browser Support
 
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
+### How AI Was Used
+
+- Generating initial component structure (e.g., `QuizPlayer.jsx`, `Timer.jsx`)
+- Writing utility functions in `utils/`
+- Debugging Firebase integration issues
+- Drafting documentation (including this README)
+- Suggesting UI/UX improvements and Tailwind styling patterns
 
