@@ -1,4 +1,4 @@
-# Quiz Player Application
+# Quiz Player Web Application
 
 A responsive **Quiz Player** application built with **React** (Vite), featuring smooth animations and a Firebase-powered leaderboard.
 
@@ -136,13 +136,8 @@ npm run preview
 
 ---
 
-<<<<<<< HEAD
-=======
-
-
 ---
 
->>>>>>> 51ea6ec4d8adb27493619d380b766afc4782c183
 ## Features in Detail
 
 ### Quiz Listing
@@ -189,7 +184,6 @@ npm run preview
 
 ---
 
-<<<<<<< HEAD
 
 ### How AI Was Used
 
@@ -198,6 +192,4 @@ npm run preview
 - Debugging Firebase integration issues
 - Drafting documentation (including this README)
 - Suggesting UI/UX improvements and Tailwind styling patterns
-=======
->>>>>>> 51ea6ec4d8adb27493619d380b766afc4782c183
 
