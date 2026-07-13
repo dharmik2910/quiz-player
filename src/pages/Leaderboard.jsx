@@ -132,7 +132,7 @@ useEffect(() => {
                     <div className="flex items-center gap-2 mb-1">
                       <User className="text-gray-500 flex-shrink-0" />
                       <p className="font-semibold text-gray-900 truncate">
-                        {entry.name || 'Anonymous'}
+{entry.name?.trim() ? entry.name : '—'}
                       </p>
                     </div>
                     <p className="text-xs text-gray-500">
@@ -153,7 +153,7 @@ useEffect(() => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={onHome}
-            className="w-full mt-6 py-3 px-6 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-all duration-200 flex items-center justify-center gap-2"
+            className="w-full mt-6 py-3 px-6 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
           >
             <Home />
             <span>Back to Home</span>

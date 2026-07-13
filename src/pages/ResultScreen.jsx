@@ -234,7 +234,7 @@ const ResultScreen = ({ result, quizId, quizTitle, onPlayAgain, onHome }) => {
                   whileTap={{ scale: 0.98 }}
                   onClick={handleSubmitScore}
                   disabled={isSubmitting || isSubmitted}
-                  className="w-full py-3 px-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full py-3 px-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Send size={18} />
                   <span>{isSubmitted ? 'Submitted!' : isSubmitting ? 'Submitting...' : 'Submit to Leaderboard'}</span>
@@ -339,7 +339,7 @@ const ResultScreen = ({ result, quizId, quizTitle, onPlayAgain, onHome }) => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onPlayAgain}
-              className="flex-1 py-4 px-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+              className="flex-1 py-4 px-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer"
             >
               <RefreshCw size={20} />
               <span>Play Again</span>
@@ -349,7 +349,7 @@ const ResultScreen = ({ result, quizId, quizTitle, onPlayAgain, onHome }) => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onHome}
-              className="flex-1 py-4 px-6 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-all duration-200 flex items-center justify-center gap-2"
+              className="flex-1 py-4 px-6 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
             >
               <Home size={20} />
               <span>All Quizzes</span>

@@ -7,7 +7,6 @@ import QuizList from './pages/QuizList';
 import QuizPlayer from './pages/QuizPlayer';
 import ResultScreen from './pages/ResultScreen';
 import Leaderboard from './pages/Leaderboard';
-import { saveScore } from './services/config';
 import { getQuizById, getQuizzes } from './utils/quizData';
 import QuizPlayerSkeleton from './components/quiz/QuizPlayerSkeleton';
 import LeaderboardSkeleton from './components/leaderboard/LeaderboardSkeleton';
@@ -70,21 +69,8 @@ const QuizPlay = () => {
   const handleComplete = (result) => {
     if (!selectedQuiz) return;
 
-    const playerName = `Player_${Date.now().toString(36)}`;
-
-    saveScore({
-      name: playerName,
-      quizId: selectedQuiz.id,
-      quizTitle: selectedQuiz.title,
-      score: result.score,
-      percentage: result.percentage,
-      correctAnswers: result.correctAnswers,
-      wrongAnswers: result.wrongAnswers,
-      totalQuestions: result.totalQuestions
-    }).catch(error => {
-      console.error('Failed to save score:', error);
-    });
-
+// Do not auto-save with a random/auto-generated name.
+    // The user will enter their name on the Result screen and submit to the leaderboard.
     navigate(`/result/${quizId}`, { state: { result } });
   };
 
@@ -261,7 +247,7 @@ const LeaderboardPage = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => handleViewLeaderboard(quiz)}
-                    className="w-full py-3 px-6 bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-semibold rounded-xl hover:from-yellow-600 hover:to-orange-600 transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                    className="w-full py-3 px-6 bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-semibold rounded-xl hover:from-yellow-600 hover:to-orange-600 transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <Trophy size={18} />
                     <span>View Leaderboard</span>
@@ -312,7 +298,7 @@ const QuizLeaderboard = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error}</p>
-          <button onClick={handleHome} className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg">
+          <button onClick={handleHome} className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg cursor-pointer">
             Go Home
           </button>
         </div>
@@ -325,7 +311,7 @@ const QuizLeaderboard = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-600">Quiz not found</p>
-          <button onClick={handleHome} className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg">
+          <button onClick={handleHome} className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg cursor-pointer">
             Go Home
           </button>
         </div>

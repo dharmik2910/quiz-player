@@ -1,77 +1,106 @@
 # Quiz Player Application
 
-A production-grade, responsive Quiz Player application built with React.js, featuring smooth animations, Firebase integration for leaderboards, and a modern UI/UX design.
+A production-grade, responsive **Quiz Player** application built with **React** (Vite), featuring smooth animations and a Firebase-powered leaderboard.
+
+---
 
 ## Features
 
-- **Quiz Listing**: Browse and filter quizzes by category and difficulty
-- **Interactive Quiz Player**: 
+- **Quiz Listing**: Browse and filter quizzes by **category** and **difficulty**
+- **Interactive Quiz Player**:
   - Countdown timer with visual progress
   - Smooth question transitions
   - Instant feedback with explanations
   - Progress tracking
 - **Result Screen**: Detailed performance analytics with animations
 - **Firebase Leaderboard**: Compete with others on the global leaderboard
-- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
-- **Smooth Animations**: Powered by Framer Motion for seamless transitions
+- **Responsive UI**: Optimized for desktop, tablet, and mobile
+- **Smooth Animations**: Powered by **Framer Motion**
+
+---
 
 ## Tech Stack
 
-- **React.js** (Vite) - Modern build tool and fast development
-- **Tailwind CSS** - Utility-first CSS framework for styling
-- **Firebase Firestore** - Cloud database for leaderboard
-- **React Router** - Navigation and routing
-- **Framer Motion** - Animation library
-- **React Icons** - Icon library
+- **React.js** (Vite)
+- **Tailwind CSS** (utility-first styling)
+- **Firebase Firestore** (leaderboard data)
+- **React Router DOM** (routing)
+- **Framer Motion** (animations)
+- **React Icons** / **Lucide React** (icons)
+
+---
 
 ## Project Structure
 
-```
+```txt
 src/
-├── components/          # Reusable UI components
-│   ├── QuizCard.jsx    # Quiz card component
-│   ├── Timer.jsx       # Countdown timer with circular progress
-│   ├── ProgressBar.jsx # Linear progress indicator
-│   └── OptionButton.jsx # Interactive option button
-├── pages/              # Page components
-│   ├── QuizList.jsx    # Quiz listing with filters
-│   ├── QuizPlayer.jsx  # Main quiz interface
-│   ├── ResultScreen.jsx # Results and analytics
-│   └── Leaderboard.jsx # Firebase leaderboard
-├── services/           # External services
-│   └── firebaseService.js # Firebase operations
-├── utils/              # Utility functions
-│   ├── firebase.js     # Firebase configuration
-│   └── quizData.js     # Quiz data management
-├── App.jsx             # Main app component
-├── main.jsx            # Entry point
-└── index.css           # Global styles
+├── components/
+│   ├── common/
+│   │   └── SoundToggle.jsx
+│   ├── layout/
+│   │   ├── Layout.jsx
+│   │   └── Navbar.jsx
+│   ├── leaderboard/
+│   │   ├── LeaderboardDashboardSkeleton.jsx
+│   │   ├── LeaderboardListSkeleton.jsx
+│   │   ├── LeaderboardSkeleton.jsx
+│   │   └── (Leaderboard UI is in pages/)
+│   └── quiz/
+│       ├── OptionButton.jsx
+│       ├── ProgressBar.jsx
+│       ├── QuestionNav.jsx
+│       ├── QuizCard.jsx
+│       ├── QuizCardSkeleton.jsx
+│       ├── QuizPlayerSkeleton.jsx
+│       ├── Timer.jsx
+│
+├── pages/
+│   ├── QuizList.jsx
+│   ├── QuizPlayer.jsx
+│   ├── ResultScreen.jsx
+│   └── Leaderboard.jsx
+│
+├── services/
+│   └── config.js (Firebase/leaderboard integrations)
+│
+├── utils/
+│   ├── firebase.js
+│   ├── quizData.js
+│   └── soundManager.js
+│
+├── App.jsx
+└── main.jsx
 ```
+
+---
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js (v16 or higher)
-- npm or yarn
-- Firebase account (for leaderboard feature)
+- npm
+- Firebase project (optional for leaderboard)
 
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone <repository-url>
 cd quiz-player
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
-3. Configure Firebase (optional, for leaderboard):
-   - Create a `.env` file in the root directory
-   - Add your Firebase configuration:
+### Configure Firebase (optional)
+
+Create a `.env` file in the project root and add your Firebase configuration:
+
 ```env
 VITE_FIREBASE_API_KEY=your-api-key
 VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
@@ -81,12 +110,19 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=123456789
 VITE_FIREBASE_APP_ID=1:123456789:web:abc123
 ```
 
-4. Start the development server:
+> If Firebase isn’t configured, the quiz player and routing will still work, but leaderboard requests may fail.
+
+### Run the app
+
 ```bash
 npm run dev
 ```
 
-5. Open [http://localhost:5173](http://localhost:5173) in your browser
+Open:
+
+- http://localhost:5173
+
+---
 
 ## Build for Production
 
@@ -94,14 +130,19 @@ npm run dev
 npm run build
 ```
 
-Preview production build:
+Preview:
+
 ```bash
 npm run preview
 ```
 
+---
+
 ## Quiz Data Format
 
-Quizzes are loaded from `public/quiz.json`. Each quiz should follow this structure:
+Quizzes are loaded from `public/quiz.json`.
+
+Example structure:
 
 ```json
 {
@@ -125,35 +166,43 @@ Quizzes are loaded from `public/quiz.json`. Each quiz should follow this structu
 }
 ```
 
+---
+
 ## Features in Detail
 
 ### Quiz Listing
-- Search quizzes by title or description
-- Filter by category and difficulty level
-- Responsive grid layout (1-3 columns based on screen size)
+
+- Search quizzes by title/description
+- Filter by **category** and **difficulty**
+- Responsive grid layout
 - Animated card hover effects
 
 ### Quiz Player
-- **Timer**: Circular progress indicator with color changes (green → yellow → red)
-- **Progress Bar**: Visual progress through the quiz
-- **Question Navigation**: Sequential, no going back
-- **Auto-advance**: Automatically moves to next question when timer expires
-- **Instant Feedback**: Shows correct/incorrect answer with explanation
-- **Shuffled Questions & Options**: Random order for each attempt
+
+- Timer: circular progress indicator with warning color changes
+- Progress bar: visual progress across the quiz
+- Question navigation: sequential flow with navigation UI
+- Auto-advance behavior when time expires
+- Instant feedback: correct/incorrect + explanation
+- Shuffled questions and options per attempt
+- Progress persistence on refresh (attempt continuity)
 
 ### Result Screen
+
 - Total score and accuracy percentage
-- Correct/wrong answer count
-- Performance message based on score
-- Animated progress bar
-- Options to play again, view leaderboard, or go home
+- Correct/wrong answer counts
+- Performance message based on results
+- Navigation actions: play again, view leaderboard, or go home
 
 ### Leaderboard
-- Top 10 scores for each quiz
-- Sorted by score (descending) and completion time
-- Rank badges (Gold, Silver, Bronze)
+
+- Top scores for each quiz
+- Sorted by score (descending) with completion timestamp
+- Rank badges (Gold/Silver/Bronze)
 - Timestamp of completion
-- Retry functionality on error
+- Retry UI on error
+
+---
 
 ## Bonus Features
 
@@ -163,9 +212,12 @@ Quizzes are loaded from `public/quiz.json`. Each quiz should follow this structu
 - ✅ Loading and empty states
 - ✅ Clean, modern UI with gradient accents
 
+---
+
 ## Browser Support
 
 - Chrome (latest)
 - Firefox (latest)
 - Safari (latest)
 - Edge (latest)
+

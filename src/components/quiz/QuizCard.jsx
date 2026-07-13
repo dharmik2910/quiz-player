@@ -16,7 +16,7 @@ const QuizCard = ({ quiz, onPlay, index = 0 }) => {
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
       className="bg-white rounded-md shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col h-full"
     >
-      <div className="p-6 flex-1 flex flex-col">
+      <div className="p-6 flex-1 flex flex-col ">
         <div className="flex items-start justify-between mb-4">
           <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${difficultyColors[quiz.difficulty] || 'bg-gray-100 text-gray-700'}`}>
             {quiz.difficulty}
@@ -53,14 +53,14 @@ const QuizCard = ({ quiz, onPlay, index = 0 }) => {
           </div>
         </div>
 
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={() => onPlay(quiz)}
-          className="w-full py-3 px-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg"
-        >
-          Play Quiz
-        </motion.button>
+<motion.button
+  whileHover={{ scale: 1.02 }}
+  whileTap={{ scale: 0.98 }}
+  onClick={() => onPlay(quiz)}
+  className="w-full py-3 px-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg cursor-pointer"
+>
+  Play Quiz
+</motion.button>
       </div>
     </motion.div>
   );
